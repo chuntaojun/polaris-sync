@@ -72,9 +72,9 @@ public class PullTask implements Runnable {
             for (Group group : entry.getValue()) {
                 DiscoverResponse srcInstanceResponse = source.getRegistry().listInstances(service, group);
                 if (srcInstanceResponse.getCode().getValue() != StatusCodes.SUCCESS) {
-                    LOG.warn("[Core][Pull] fail to list service in source {}, type {}, group {}, code is {}",
+                    LOG.warn("[Core][Pull] fail to list service in source {}, type {}, group {}, code is {}, msg {}",
                             source.getName(), source.getRegistry().getType(), group.getName(),
-                            srcInstanceResponse.getCode().getValue());
+                            srcInstanceResponse.getCode().getValue(), srcInstanceResponse.getInfo().getValue());
                     return;
                 }
                 List<Instance> instances = srcInstanceResponse.getInstancesList();
