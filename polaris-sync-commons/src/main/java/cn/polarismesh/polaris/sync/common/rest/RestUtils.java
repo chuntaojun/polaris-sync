@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -56,7 +57,11 @@ public class RestUtils {
 
     public static String urlDecode(String value) {
         try {
-            return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
+            String encName = StandardCharsets.UTF_8.toString();
+            if (Objects.isNull(encName)) {
+                encName = "UTF-8";
+            }
+            return URLDecoder.decode(value, encName);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
