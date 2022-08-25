@@ -57,11 +57,7 @@ public class RestUtils {
 
     public static String urlDecode(String value) {
         try {
-            String encName = StandardCharsets.UTF_8.toString();
-            if (Objects.isNull(encName)) {
-                encName = "UTF-8";
-            }
-            return URLDecoder.decode(value, encName);
+            return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

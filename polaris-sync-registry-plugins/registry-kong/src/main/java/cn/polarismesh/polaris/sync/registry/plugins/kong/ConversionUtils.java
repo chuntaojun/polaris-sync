@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -68,6 +69,8 @@ public class ConversionUtils {
         if (CollectionUtils.isEmpty(data)) {
             return values;
         }
+        //TODO 测试完移除
+        LOG.info("[Registry][Kong] list services : {}", serviceObjectList);
         for (ServiceObject serviceObject : data) {
             Service service = ConversionUtils.parseServiceName(serviceObject.getName(), sourceName);
             if (null == service) {
@@ -143,6 +146,9 @@ public class ConversionUtils {
     }
 
     public static Service parseServiceName(String name, String currentSource) {
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
         String decodeName = urlDecode(name);
         if (!Pattern.matches("^.+\\..+\\..+$", decodeName)) {
             return null;
