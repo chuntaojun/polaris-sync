@@ -85,7 +85,7 @@ public class KubernetesConfigProvider implements ConfigProvider {
             apiClient = io.kubernetes.client.util.Config.defaultClient();
         }
 
-        apiClient.setHttpClient(KubernetesUtil.buildOkHttpClient());
+//        apiClient.setHttpClient(KubernetesUtil.buildOkHttpClient());
         configMapClient = new GenericKubernetesApi<>(V1ConfigMap.class, V1ConfigMapList.class, "", "v1", "configmaps",
                 apiClient);
         startAndWatch();
