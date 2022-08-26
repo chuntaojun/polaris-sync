@@ -96,6 +96,7 @@ public class KubernetesUtil {
                         if (Objects.isNull(LOCAL_ADDRESS)) {
                             return new Socket(host, port, localHost, localPort);
                         }
+                        LOG.info("[ConfigProvider][Kubernetes] use local address : {}", LOCAL_ADDRESS);
                         return new Socket(host, port, LOCAL_ADDRESS, localPort);
                     }
 
@@ -104,6 +105,7 @@ public class KubernetesUtil {
                         if (Objects.isNull(LOCAL_ADDRESS)) {
                             return new Socket(host, port);
                         }
+                        LOG.info("[ConfigProvider][Kubernetes] use local address : {}", LOCAL_ADDRESS);
                         return new Socket(host, port, LOCAL_ADDRESS, 0);
                     }
 
@@ -113,6 +115,7 @@ public class KubernetesUtil {
                         if (Objects.isNull(LOCAL_ADDRESS)) {
                             return new Socket(address, port, localAddress, localPort);
                         }
+                        LOG.info("[ConfigProvider][Kubernetes] use local address : {}", LOCAL_ADDRESS);
                         return new Socket(address, port, LOCAL_ADDRESS, localPort);
                     }
                 })
