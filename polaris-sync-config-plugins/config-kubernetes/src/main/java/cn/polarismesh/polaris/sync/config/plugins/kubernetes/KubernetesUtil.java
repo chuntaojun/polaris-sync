@@ -78,7 +78,7 @@ public class KubernetesUtil {
 
                     @Override
                     public Socket createSocket() throws IOException {
-                        LOG.info("[ConfigProvider][Kubernetes] not use local address");
+                        LOG.info("[ConfigProvider][Kubernetes] use local address to bind : {}", LOCAL_ADDRESS);
                         Socket socket = new Socket();
                         socket.bind(new InetSocketAddress(LOCAL_ADDRESS, 0));
                         return socket;
