@@ -23,7 +23,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 import javax.net.SocketFactory;
 import okhttp3.OkHttpClient;
@@ -44,6 +47,7 @@ public class KubernetesUtil {
         String interName = System.getenv("POLARIS_SYNC_NETWORK_INTERFACE");
         if (!StringUtils.isBlank(interName)) {
             try {
+                List<InetAddress> addresses = new ArrayList<>();
                 NetworkInterface nif = NetworkInterface.getByName(interName);
                 Enumeration<InetAddress> nifAddresses = nif.getInetAddresses();
                 while (nifAddresses.hasMoreElements()) {
@@ -57,10 +61,11 @@ public class KubernetesUtil {
                     if (address instanceof Inet6Address) {
                         continue;
                     }
+                    addresses.add(address);
                     LOCAL_ADDRESS = address;
                     break;
                 }
-                LOG.info("[ConfigProvider][Kubernetes] find network interface : {} address : {}", interName, LOCAL_ADDRESS);
+                LOG.info("[ConfigProvider][Kubernetes] find network interface : {} address : {}", interName, addresses);
             } catch (SocketException e) {
                 LOG.error("[ConfigProvider][Kubernetes] find network interface : {} fail", interName, e);
             }
@@ -70,6 +75,12 @@ public class KubernetesUtil {
     public static OkHttpClient buildOkHttpClient() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .socketFactory(new SocketFactory() {
+
+                    @Override
+                    public Socket createSocket() throws IOException {
+                        return new Socket();
+                    }
+
                     @Override
                     public Socket createSocket(String host, int port) throws IOException {
                         if (Objects.isNull(LOCAL_ADDRESS)) {
