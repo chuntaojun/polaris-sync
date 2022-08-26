@@ -18,6 +18,7 @@
 package cn.polarismesh.polaris.sync.config.plugins.kubernetes;
 
 import java.io.IOException;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
@@ -33,9 +34,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
-public class KubernetesClient {
+public class KubernetesUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KubernetesClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KubernetesUtil.class);
 
     private static InetAddress LOCAL_ADDRESS = null;
 
@@ -45,7 +46,20 @@ public class KubernetesClient {
             try {
                 NetworkInterface nif = NetworkInterface.getByName(interName);
                 Enumeration<InetAddress> nifAddresses = nif.getInetAddresses();
-                LOCAL_ADDRESS = nifAddresses.nextElement();
+                while (nifAddresses.hasMoreElements()) {
+                    InetAddress address = nifAddresses.nextElement();
+                    if (address.isLoopbackAddress()) {
+                        continue;
+                    }
+                    if (StringUtils.contains(address.getHostAddress(), ":")) {
+                        continue;
+                    }
+                    if (address instanceof Inet6Address) {
+                        continue;
+                    }
+                    LOCAL_ADDRESS = address;
+                    break;
+                }
                 LOG.info("[ConfigProvider][Kubernetes] find network interface : {} address : {}", interName, LOCAL_ADDRESS);
             } catch (SocketException e) {
                 LOG.error("[ConfigProvider][Kubernetes] find network interface : {} fail", interName, e);

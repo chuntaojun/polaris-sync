@@ -24,7 +24,6 @@ import cn.polarismesh.polaris.sync.registry.pb.RegistryProto.Registry;
 import com.google.gson.Gson;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
-import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1ConfigMap;
 import io.kubernetes.client.openapi.models.V1ConfigMapList;
 import io.kubernetes.client.util.Watchable;
@@ -42,7 +41,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -87,7 +85,7 @@ public class KubernetesConfigProvider implements ConfigProvider {
             apiClient = io.kubernetes.client.util.Config.defaultClient();
         }
 
-        apiClient.setHttpClient(KubernetesClient.buildOkHttpClient());
+        apiClient.setHttpClient(KubernetesUtil.buildOkHttpClient());
         configMapClient = new GenericKubernetesApi<>(V1ConfigMap.class, V1ConfigMapList.class, "", "v1", "configmaps",
                 apiClient);
         startAndWatch();
