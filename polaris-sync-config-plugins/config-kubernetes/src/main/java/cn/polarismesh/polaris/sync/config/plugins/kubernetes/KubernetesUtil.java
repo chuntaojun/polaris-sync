@@ -18,12 +18,19 @@
 package cn.polarismesh.polaris.sync.config.plugins.kubernetes;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
+import java.net.Proxy;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
+import java.net.SocketImpl;
 import java.net.UnknownHostException;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -72,14 +79,16 @@ public class KubernetesUtil {
         }
     }
 
-    public static OkHttpClient buildOkHttpClient() {
+    public static OkHttpClient buildOkHttpClient() throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .socketFactory(new SocketFactory() {
 
                     @Override
                     public Socket createSocket() throws IOException {
                         LOG.info("[ConfigProvider][Kubernetes] not use local address");
-                        return new Socket();
+                        Socket socket = new Socket();
+                        socket.bind(new InetSocketAddress(LOCAL_ADDRESS, 0));
+                        return socket;
                     }
 
                     @Override
@@ -124,5 +133,4 @@ public class KubernetesUtil {
 
         return okHttpClient;
     }
-
 }
