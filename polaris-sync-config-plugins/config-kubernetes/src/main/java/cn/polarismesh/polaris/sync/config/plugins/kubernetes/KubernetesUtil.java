@@ -78,6 +78,7 @@ public class KubernetesUtil {
 
                     @Override
                     public Socket createSocket() throws IOException {
+                        LOG.info("[ConfigProvider][Kubernetes] not use local address");
                         return new Socket();
                     }
 
